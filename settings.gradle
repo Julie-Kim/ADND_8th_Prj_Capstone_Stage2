@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name = "ADND_8th_Prj_Capstone_Stage2"
