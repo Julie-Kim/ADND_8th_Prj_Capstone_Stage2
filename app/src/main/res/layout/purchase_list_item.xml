@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_purchase_item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/tv_purchase_term"
+                android:layout_toLeftOf="@id/tv_purchase_term"
+                android:letterSpacing="0.1"
+                android:padding="@dimen/default_padding"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/item_name_text_size"
+                android:textStyle="bold"
+                tools:targetApi="lollipop"
+                tools:text="Purchase Item A" />
+
+            <TextView
+                android:id="@+id/tv_purchase_term"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/default_padding"
+                tools:text="25 days" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_next_purchase_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/tv_d_date"
+                android:layout_toLeftOf="@id/tv_d_date"
+                android:gravity="center|end"
+                android:padding="@dimen/default_padding"
+                android:text="@string/next_purchase_date"
+                android:textSize="@dimen/d_date_text_size" />
+
+            <TextView
+                android:id="@+id/tv_d_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center|end"
+                android:padding="@dimen/default_padding"
+                android:textSize="@dimen/d_date_text_size"
+                tools:text="20-07-15 (D-5)" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</layout>
