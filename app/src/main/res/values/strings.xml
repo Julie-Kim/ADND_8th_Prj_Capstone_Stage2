@@ -3,4 +3,5 @@
     <string name="items_purchased_regularly">Items purchased regularly</string>
     <string name="empty_item_message">No items.\nPlease add items with the [ + ] button.</string>
     <string name="next_purchase_date">Next Purchase Date: </string>
+    <string name="purchase_term">Purchase Term: </string>
 </resources>
