@@ -9,4 +9,9 @@
     <dimen name="purchase_detail_margin_start">24dp</dimen>
     <dimen name="small_progressbar_size">24dp</dimen>
     <dimen name="rating_horizontal_margin">4dp</dimen>
+    <dimen name="input_dialog_padding">12dp</dimen>
+    <dimen name="small_padding">4dp</dimen>
+    <dimen name="number_picker_height">120dp</dimen>
+    <dimen name="date_picker_height">160dp</dimen>
+    <dimen name="label_text_padding_top">24dp</dimen>
 </resources>

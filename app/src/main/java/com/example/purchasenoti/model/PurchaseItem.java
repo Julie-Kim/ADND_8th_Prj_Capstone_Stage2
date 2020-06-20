@@ -2,23 +2,25 @@ package com.example.purchasenoti.model;
 
 import androidx.annotation.NonNull;
 
-import java.util.Date;
-
 public class PurchaseItem {
 
     private String mItemName;
 
-    private Date mPurchaseTerm;
+    private int mPurchaseTermYear;
+    private int mPurchaseTermMonth;
+    private int mPurchaseTermDay;
 
-    private String mPurchaseTermString;
+    private String mLastPurchaseDate;
 
-    private Date mLastPurchaseDate;
+    private String mNextPurchaseDate;
 
-    private String mLastPurchaseDateString;
-
-    private Date mNextPurchaseDate;
-
-    private String mNextPurchaseDateString;
+    public PurchaseItem(String itemName, int termYear, int termMonth, int termDay, String lastPurchaseDate) {
+        mItemName = itemName;
+        mPurchaseTermYear = termYear;
+        mPurchaseTermMonth = termMonth;
+        mPurchaseTermDay = termDay;
+        mLastPurchaseDate = lastPurchaseDate;
+    }
 
     @NonNull
     @Override

@@ -4,4 +4,11 @@
     <string name="empty_item_message">No items.\nPlease add items with the [ + ] button.</string>
     <string name="next_purchase_date">Next Purchase Date: </string>
     <string name="purchase_term">Purchase Term: </string>
+    <string name="enter_purchase_item">Enter the item purchased regularly</string>
+    <string name="item_name">Item name</string>
+    <string name="item_purchase_term">Item purchase term</string>
+    <string name="last_purchased_date">Last purchased date</string>
+    <string name="years">year(s)</string>
+    <string name="days">day(s)</string>
+    <string name="months">month(s)</string>
 </resources>
