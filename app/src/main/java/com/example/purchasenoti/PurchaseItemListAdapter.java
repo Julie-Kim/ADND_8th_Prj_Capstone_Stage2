@@ -23,6 +23,7 @@ public class PurchaseItemListAdapter extends RecyclerView.Adapter<PurchaseItemLi
 
     public interface PurchaseItemOnClickHandler {
         void onItemClick(PurchaseItem purchaseItem);
+        void onEdit(PurchaseItem purchaseItem);
         void onDelete(PurchaseItem purchaseItem);
     }
 
@@ -72,6 +73,7 @@ public class PurchaseItemListAdapter extends RecyclerView.Adapter<PurchaseItemLi
         holder.mBinding.tvNextPurchaseDate.setText(String.format(Locale.getDefault(), "%s  %s",
                 nextDate, DateUtils.getDDayString(nextDate)));
 
+        holder.mBinding.ivEdit.setOnClickListener(v -> mOnClickHandler.onEdit(item));
         holder.mBinding.ivDelete.setOnClickListener(v -> mOnClickHandler.onDelete(item));
     }
 

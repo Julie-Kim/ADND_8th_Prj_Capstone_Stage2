@@ -1,5 +1,6 @@
 package com.example.purchasenoti;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -61,17 +62,18 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
 
     @Override
     public void onItemClick(PurchaseItem purchaseItem) {
+        Intent intent = new Intent(this, ProductRecommendationActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onEdit(PurchaseItem purchaseItem) {
         AppExecutors.getInstance().diskIO().execute(() -> {
             int id = purchaseItem.getId();
-            Log.d(TAG, "onDelete() id: " + id);
+            Log.d(TAG, "onEdit() id: " + id);
 
             PurchaseItem currentItem = mDb.purchaseDao().loadPurchaseItemById(id);
-            AppExecutors.getInstance().mainThread().execute(new Runnable() {
-                @Override
-                public void run() {
-                    showItemInputDialog(currentItem);
-                }
-            });
+            AppExecutors.getInstance().mainThread().execute(() -> showItemInputDialog(currentItem));
         });
     }
 

@@ -13,4 +13,6 @@
     <string name="months">month(s)</string>
     <string name="item_name_error">No item name. Item not saved.</string>
     <string name="delete_item">Delete purchase item</string>
+    <string name="edit_item">Edit purchase item</string>
+    <string name="product_recommendation">Product recommendation</string>
 </resources>
