@@ -2,10 +2,10 @@
 <resources>
     <dimen name="default_padding">8dp</dimen>
     <dimen name="title_layout_padding">16dp</dimen>
-    <dimen name="message_text_size">20sp</dimen>
+    <dimen name="message_text_size">16sp</dimen>
     <dimen name="progressbar_size">42dp</dimen>
     <dimen name="item_name_text_size">22sp</dimen>
-    <dimen name="d_date_text_size">18sp</dimen>
+    <dimen name="d_date_text_size">16sp</dimen>
     <dimen name="purchase_detail_margin_start">24dp</dimen>
     <dimen name="small_progressbar_size">24dp</dimen>
     <dimen name="rating_horizontal_margin">4dp</dimen>
@@ -14,4 +14,5 @@
     <dimen name="number_picker_height">120dp</dimen>
     <dimen name="date_picker_height">160dp</dimen>
     <dimen name="label_text_padding_top">24dp</dimen>
+    <dimen name="stroke_width">2dp</dimen>
 </resources>

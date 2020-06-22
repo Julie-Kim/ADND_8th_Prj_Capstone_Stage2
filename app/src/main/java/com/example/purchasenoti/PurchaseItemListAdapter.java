@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.purchasenoti.databinding.PurchaseListItemBinding;
 import com.example.purchasenoti.model.PurchaseItem;
+import com.example.purchasenoti.util.DateUtils;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class PurchaseItemListAdapter extends RecyclerView.Adapter<PurchaseItemListAdapter.PurchaseItemListAdapterViewHolder> {
     private static final String TAG = PurchaseItemListAdapter.class.getSimpleName();
@@ -20,7 +22,8 @@ public class PurchaseItemListAdapter extends RecyclerView.Adapter<PurchaseItemLi
     private final PurchaseItemOnClickHandler mOnClickHandler;
 
     public interface PurchaseItemOnClickHandler {
-        void onClick(PurchaseItem purchaseItem);
+        void onItemClick(PurchaseItem purchaseItem);
+        void onDelete(PurchaseItem purchaseItem);
     }
 
     private ArrayList<PurchaseItem> mPurchaseItemList = new ArrayList<>();
@@ -43,9 +46,9 @@ public class PurchaseItemListAdapter extends RecyclerView.Adapter<PurchaseItemLi
         @Override
         public void onClick(View v) {
             PurchaseItem purchaseItem = mPurchaseItemList.get(getAdapterPosition());
-            Log.d(TAG, "onClick(), clicked purchase item: " + purchaseItem.toString()); //TODO
+            Log.d(TAG, "onClick(), clicked purchase item: " + purchaseItem.toString());
 
-            mOnClickHandler.onClick(purchaseItem);
+            mOnClickHandler.onItemClick(purchaseItem);
         }
     }
 
@@ -59,7 +62,17 @@ public class PurchaseItemListAdapter extends RecyclerView.Adapter<PurchaseItemLi
 
     @Override
     public void onBindViewHolder(@NonNull PurchaseItemListAdapterViewHolder holder, int position) {
-        //TODO
+        PurchaseItem item = mPurchaseItemList.get(position);
+        Log.d(TAG, "onBindViewHolder() item: " + item.toString());
+
+        holder.mBinding.tvPurchaseItemName.setText(item.getItemName());
+
+        String nextDate = DateUtils.getNextDate(item.getLastPurchasedDate(),
+                item.getPurchaseTermYear(), item.getPurchaseTermMonth(), item.getPurchaseTermDay());
+        holder.mBinding.tvNextPurchaseDate.setText(String.format(Locale.getDefault(), "%s  %s",
+                nextDate, DateUtils.getDDayString(nextDate)));
+
+        holder.mBinding.ivDelete.setOnClickListener(v -> mOnClickHandler.onDelete(item));
     }
 
     @Override
