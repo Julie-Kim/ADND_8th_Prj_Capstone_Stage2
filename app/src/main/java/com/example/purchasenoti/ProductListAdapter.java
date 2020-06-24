@@ -21,7 +21,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     public interface ProductOnClickHandler {
 
-        void onClick(Product mProduct);
+        void onClick(Product product);
     }
 
     private ArrayList<Product> mProductList = new ArrayList<>();
@@ -60,7 +60,8 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ProductListAdapterViewHolder holder, int position) {
-        //TODO
+        Product product = mProductList.get(position);
+        Log.d(TAG, "onBindViewHolder() product: " + product.toString());
     }
 
     @Override

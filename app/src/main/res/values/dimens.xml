@@ -15,4 +15,5 @@
     <dimen name="date_picker_height">160dp</dimen>
     <dimen name="label_text_padding_top">24dp</dimen>
     <dimen name="stroke_width">2dp</dimen>
+    <dimen name="star_size">16dp</dimen>
 </resources>

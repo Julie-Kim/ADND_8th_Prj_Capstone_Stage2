@@ -1,4 +1,4 @@
-package com.example.purchasenoti.util;
+package com.example.purchasenoti.utilities;
 
 import android.widget.DatePicker;
 

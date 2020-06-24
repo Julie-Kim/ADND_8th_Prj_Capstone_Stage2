@@ -1,6 +1,7 @@
 *.iml
 .gradle
 /local.properties
+/gradle.properties
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -12,3 +13,6 @@
 /captures
 .externalNativeBuild
 .cxx
+.idea/.gitignore
+app/libs/
+app/src/main/java/com/example/purchasenoti/util/

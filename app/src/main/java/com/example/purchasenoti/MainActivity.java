@@ -18,7 +18,7 @@ import com.example.purchasenoti.database.PurchaseItemDatabase;
 import com.example.purchasenoti.databinding.ActivityMainBinding;
 import com.example.purchasenoti.databinding.ItemInputDialogBinding;
 import com.example.purchasenoti.model.PurchaseItem;
-import com.example.purchasenoti.util.DateUtils;
+import com.example.purchasenoti.utilities.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,13 +56,18 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
     }
 
     private void loadPurchaseItemList() {
-        showOrHidePurchaseItems(true);
         setupViewModel();
     }
 
     @Override
     public void onItemClick(PurchaseItem purchaseItem) {
         Intent intent = new Intent(this, ProductRecommendationActivity.class);
+        intent.putExtra(ItemConstant.KEY_ID, purchaseItem.getId());
+        intent.putExtra(ItemConstant.KEY_ITEM_NAME, purchaseItem.getItemName());
+        intent.putExtra(ItemConstant.KEY_PURCHASE_TERM_YEAR, purchaseItem.getPurchaseTermYear());
+        intent.putExtra(ItemConstant.KEY_PURCHASE_TERM_MONTH, purchaseItem.getPurchaseTermMonth());
+        intent.putExtra(ItemConstant.KEY_PURCHASE_TERM_DAY, purchaseItem.getPurchaseTermDay());
+        intent.putExtra(ItemConstant.KEY_LAST_PURCHASED_DATE, purchaseItem.getLastPurchasedDate());
         startActivity(intent);
     }
 
@@ -161,6 +166,8 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
     }
 
     private void setupViewModel() {
+        showOrHideLoadingIndicator(true);
+
         if (mViewModelFactory == null) {
             mViewModelFactory = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication());
         }
@@ -168,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
 
         viewModel.getmPurchaseItems().observe(this, purchaseItems -> {
             Log.d(TAG, "Updating list of purchase items from LiveData in ViewModel");
+            showOrHideLoadingIndicator(false);
 
             if (purchaseItems.isEmpty()) {
                 showOrHidePurchaseItems(false);
@@ -176,6 +184,10 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
                 mAdapter.setPurchaseItemList(new ArrayList<>(purchaseItems));
             }
         });
+    }
+
+    private void showOrHideLoadingIndicator(boolean show) {
+        mBinding.pbLoadingIndicator.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void showOrHidePurchaseItems(boolean show) {

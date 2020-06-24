@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.purchasenoti.databinding.PurchaseListItemBinding;
 import com.example.purchasenoti.model.PurchaseItem;
-import com.example.purchasenoti.util.DateUtils;
+import com.example.purchasenoti.utilities.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Locale;

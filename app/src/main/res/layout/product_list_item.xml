@@ -70,36 +70,36 @@
 
                 <ImageView
                     android:id="@+id/iv_rating_star_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/star_size"
+                    android:layout_height="@dimen/star_size"
                     android:src="@drawable/ic_star_border_red_32dp"
                     tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/iv_rating_star_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/star_size"
+                    android:layout_height="@dimen/star_size"
                     android:src="@drawable/ic_star_border_red_32dp"
                     tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/iv_rating_star_3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/star_size"
+                    android:layout_height="@dimen/star_size"
                     android:src="@drawable/ic_star_border_red_32dp"
                     tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/iv_rating_star_4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/star_size"
+                    android:layout_height="@dimen/star_size"
                     android:src="@drawable/ic_star_border_red_32dp"
                     tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/iv_rating_star_5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/star_size"
+                    android:layout_height="@dimen/star_size"
                     android:src="@drawable/ic_star_border_red_32dp"
                     tools:ignore="ContentDescription" />
             </LinearLayout>
