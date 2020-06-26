@@ -1,6 +1,10 @@
 package com.example.purchasenoti.utilities;
 
+import android.content.Context;
+import android.text.TextUtils;
 import android.widget.DatePicker;
+
+import com.example.purchasenoti.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -87,5 +91,33 @@ public class DateUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String getTermString(Context context, int year, int month, int day) {
+        StringBuilder termString = new StringBuilder();
+
+        if (year > 1) {
+            termString.append(year).append(context.getString(R.string.years_space));
+        } else if (year == 1) {
+            termString.append(year).append(context.getString(R.string.year_space));
+        }
+
+        if (month > 1) {
+            termString.append(month).append(context.getString(R.string.months_space));
+        } else if (month == 1) {
+            termString.append(month).append(context.getString(R.string.month_space));
+        }
+
+        if (day > 1) {
+            termString.append(day).append(context.getString(R.string.days_space));
+        } else if (day == 1) {
+            termString.append(day).append(context.getString(R.string.day_space));
+        }
+
+        if (TextUtils.isEmpty(termString)) {
+            termString.append(day).append(context.getString(R.string.day_space));
+        }
+
+        return termString.toString();
     }
 }

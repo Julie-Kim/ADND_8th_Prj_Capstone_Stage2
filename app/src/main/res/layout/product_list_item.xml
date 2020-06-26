@@ -7,7 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/default_padding">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
@@ -24,7 +25,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="ContentDescription" />
-            <!--            TODO: set content description-->
 
             <ProgressBar
                 android:id="@+id/pb_image_loading_indicator"
@@ -47,12 +47,10 @@
                 android:id="@+id/tv_product_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:letterSpacing="0.1"
                 android:padding="@dimen/default_padding"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/item_name_text_size"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/product_name_text_size"
                 android:textStyle="bold"
-                tools:targetApi="lollipop"
                 tools:text="Product A" />
 
             <TextView

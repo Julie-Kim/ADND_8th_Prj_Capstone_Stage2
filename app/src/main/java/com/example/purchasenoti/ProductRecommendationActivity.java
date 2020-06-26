@@ -1,6 +1,7 @@
 package com.example.purchasenoti;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,10 +31,6 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
     private ProductListAdapter mAdapter;
 
     private String mItemName;
-    private int mPurchaseTermYear;
-    private int mPurchaseTermMonth;
-    private int mPurchaseTermDay;
-    private String mLastPurchasedDate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,24 +47,15 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
             mItemName = intent.getStringExtra(ItemConstant.KEY_ITEM_NAME);
             Log.d(TAG, "onCreate() purchase item name: " + mItemName);
 
-//            setTitle(mItemName);
             mBinding.tvPurchaseItemName.setText(mItemName);
         }
 
-        if (intent.hasExtra(ItemConstant.KEY_PURCHASE_TERM_YEAR)) {
-            mPurchaseTermYear = intent.getIntExtra(ItemConstant.KEY_PURCHASE_TERM_YEAR, 0);
+        if (intent.hasExtra(ItemConstant.KEY_PURCHASE_TERM)) {
+            mBinding.tvPurchaseTerm.setText(intent.getStringExtra(ItemConstant.KEY_PURCHASE_TERM));
         }
 
-        if (intent.hasExtra(ItemConstant.KEY_PURCHASE_TERM_MONTH)) {
-            mPurchaseTermMonth = intent.getIntExtra(ItemConstant.KEY_PURCHASE_TERM_MONTH, 0);
-        }
-
-        if (intent.hasExtra(ItemConstant.KEY_PURCHASE_TERM_DAY)) {
-            mPurchaseTermDay = intent.getIntExtra(ItemConstant.KEY_PURCHASE_TERM_DAY, 0);
-        }
-
-        if (intent.hasExtra(ItemConstant.KEY_LAST_PURCHASED_DATE)) {
-            mLastPurchasedDate = intent.getStringExtra(ItemConstant.KEY_LAST_PURCHASED_DATE);
+        if (intent.hasExtra(ItemConstant.KEY_NEXT_PURCHASED_DATE)) {
+            mBinding.tvNextPurchaseDate.setText(intent.getStringExtra(ItemConstant.KEY_NEXT_PURCHASED_DATE));
         }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -128,7 +116,11 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
 
     @Override
     public void onClick(Product product) {
-        //TODO: link to Amazon page
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(product.getLink()));
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     private void updateProductList(ArrayList<Product> products) {

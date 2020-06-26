@@ -2,12 +2,17 @@ package com.example.purchasenoti.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import com.example.purchasenoti.utilities.DateUtils;
+
+import java.util.Locale;
 
 @Entity(tableName = "purchase_item")
 public class PurchaseItem implements Parcelable {
@@ -30,6 +35,9 @@ public class PurchaseItem implements Parcelable {
 
     @ColumnInfo(name = "last_purchased_date")
     private String mLastPurchasedDate;
+
+    @Ignore
+    private String mNextPurchaseDate;
 
     public PurchaseItem(int id, String itemName, int purchaseTermYear, int purchaseTermMonth, int purchaseTermDay, String lastPurchasedDate) {
         mId = id;
@@ -57,6 +65,7 @@ public class PurchaseItem implements Parcelable {
         mPurchaseTermMonth = in.readInt();
         mPurchaseTermDay = in.readInt();
         mLastPurchasedDate = in.readString();
+        mNextPurchaseDate = in.readString();
     }
 
     public static final Creator<PurchaseItem> CREATOR = new Creator<PurchaseItem>() {
@@ -77,7 +86,8 @@ public class PurchaseItem implements Parcelable {
         return "_id: " + mId +
                 "\nitem name: " + mItemName +
                 "\npurchase term: " + mPurchaseTermYear + " year(s) " + mPurchaseTermMonth + " month(s) " + mPurchaseTermDay + " day(s)" +
-                "\nlast purchased date: " + mLastPurchasedDate;
+                "\nlast purchased date: " + mLastPurchasedDate +
+                "\nnext purchase date: " + mNextPurchaseDate;
     }
 
     @Override
@@ -93,6 +103,7 @@ public class PurchaseItem implements Parcelable {
         dest.writeInt(mPurchaseTermMonth);
         dest.writeInt(mPurchaseTermDay);
         dest.writeString(mLastPurchasedDate);
+        dest.writeString(mNextPurchaseDate);
     }
 
     public int getId() {
@@ -117,5 +128,21 @@ public class PurchaseItem implements Parcelable {
 
     public String getLastPurchasedDate() {
         return mLastPurchasedDate;
+    }
+
+    public String getNextPurchaseDate() {
+        if (TextUtils.isEmpty(mNextPurchaseDate)) {
+            calculateNextPurchaseDate();
+        }
+
+        return mNextPurchaseDate;
+    }
+
+    private void calculateNextPurchaseDate() {
+        String nextDate = DateUtils.getNextDate(mLastPurchasedDate,
+                mPurchaseTermYear, mPurchaseTermMonth, mPurchaseTermDay);
+
+        mNextPurchaseDate = String.format(Locale.getDefault(), "%s  %s",
+                nextDate, DateUtils.getDDayString(nextDate));
     }
 }

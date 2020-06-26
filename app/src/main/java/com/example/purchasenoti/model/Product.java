@@ -66,8 +66,8 @@ public class Product implements Parcelable {
         return mImage;
     }
 
-    public ArrayList<Price> getPrices() {
-        return mPrices;
+    public String getPrice() {
+        return mPrices.get(0).getRaw();
     }
 
     public float getRating() {
@@ -84,7 +84,7 @@ public class Product implements Parcelable {
         productString.append("\nimage: ").append(mImage);
 
         if (mPrices != null && !mPrices.isEmpty()) {
-            productString.append("\nprice: ").append(mPrices.get(0).getRaw());
+            productString.append("\nprice: ").append(getPrice());
         }
 
         productString.append("\nrating: ").append(mRating);

@@ -64,10 +64,9 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
         Intent intent = new Intent(this, ProductRecommendationActivity.class);
         intent.putExtra(ItemConstant.KEY_ID, purchaseItem.getId());
         intent.putExtra(ItemConstant.KEY_ITEM_NAME, purchaseItem.getItemName());
-        intent.putExtra(ItemConstant.KEY_PURCHASE_TERM_YEAR, purchaseItem.getPurchaseTermYear());
-        intent.putExtra(ItemConstant.KEY_PURCHASE_TERM_MONTH, purchaseItem.getPurchaseTermMonth());
-        intent.putExtra(ItemConstant.KEY_PURCHASE_TERM_DAY, purchaseItem.getPurchaseTermDay());
-        intent.putExtra(ItemConstant.KEY_LAST_PURCHASED_DATE, purchaseItem.getLastPurchasedDate());
+        intent.putExtra(ItemConstant.KEY_PURCHASE_TERM, DateUtils.getTermString(this,
+                purchaseItem.getPurchaseTermYear(), purchaseItem.getPurchaseTermMonth(), purchaseItem.getPurchaseTermDay()));
+        intent.putExtra(ItemConstant.KEY_NEXT_PURCHASED_DATE, purchaseItem.getNextPurchaseDate());
         startActivity(intent);
     }
 

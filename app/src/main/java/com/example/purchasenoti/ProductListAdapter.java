@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.purchasenoti.databinding.ProductListItemBinding;
 import com.example.purchasenoti.model.Product;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -20,7 +22,6 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     private final ProductOnClickHandler mOnClickHandler;
 
     public interface ProductOnClickHandler {
-
         void onClick(Product product);
     }
 
@@ -48,6 +49,10 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
             mOnClickHandler.onClick(product);
         }
+
+        void showOrHideLoadingIndicator(boolean show) {
+            mBinding.pbImageLoadingIndicator.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 
     @NonNull
@@ -62,6 +67,47 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     public void onBindViewHolder(@NonNull ProductListAdapterViewHolder holder, int position) {
         Product product = mProductList.get(position);
         Log.d(TAG, "onBindViewHolder() product: " + product.toString());
+
+        String productTitle = product.getTitle();
+        holder.mBinding.tvProductName.setText(productTitle);
+        holder.mBinding.tvPrice.setText(product.getPrice());
+
+        holder.showOrHideLoadingIndicator(true);
+        Picasso.get()
+                .load(product.getImage())
+                .noPlaceholder()
+                .error(R.drawable.error_image)
+                .into(holder.mBinding.ivProductImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                holder.showOrHideLoadingIndicator(false);
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                holder.showOrHideLoadingIndicator(false);
+                            }
+                        }
+                );
+
+        holder.mBinding.ivProductImage.setContentDescription(productTitle);
+
+        setRatingStarView(holder, Math.round(product.getRating()));
+    }
+
+    private void setRatingStarView(@NonNull ProductListAdapterViewHolder holder, int rating) {
+        AppExecutors.getInstance().mainThread().execute(() -> {
+            holder.mBinding.ivRatingStar1.setImageResource(1 <= rating ?
+                    R.drawable.ic_star_red_32dp : R.drawable.ic_star_border_red_32dp);
+            holder.mBinding.ivRatingStar2.setImageResource(2 <= rating ?
+                    R.drawable.ic_star_red_32dp : R.drawable.ic_star_border_red_32dp);
+            holder.mBinding.ivRatingStar3.setImageResource(3 <= rating ?
+                    R.drawable.ic_star_red_32dp : R.drawable.ic_star_border_red_32dp);
+            holder.mBinding.ivRatingStar4.setImageResource(4 <= rating ?
+                    R.drawable.ic_star_red_32dp : R.drawable.ic_star_border_red_32dp);
+            holder.mBinding.ivRatingStar5.setImageResource(5 <= rating ?
+                    R.drawable.ic_star_red_32dp : R.drawable.ic_star_border_red_32dp);
+        });
     }
 
     @Override
