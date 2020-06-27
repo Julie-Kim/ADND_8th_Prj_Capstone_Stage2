@@ -35,7 +35,9 @@ public class EditDialogUtils {
         initPurchaseTermPicker(dialogBinding);
 
         if (currentItem != null) {
+            String itemName = currentItem.getItemName();
             dialogBinding.inputItemName.setText(currentItem.getItemName());
+            dialogBinding.inputItemName.setSelection(itemName.length());
 
             dialogBinding.yearPicker.setValue(currentItem.getPurchaseTermYear());
             dialogBinding.monthPicker.setValue(currentItem.getPurchaseTermMonth());
@@ -94,7 +96,6 @@ public class EditDialogUtils {
 
         dialogBinding.dayPicker.setMinValue(0);
         dialogBinding.dayPicker.setMaxValue(30);
-        dialogBinding.dayPicker.setValue(1);
         dialogBinding.dayPicker.setWrapSelectorWheel(false);
     }
 }

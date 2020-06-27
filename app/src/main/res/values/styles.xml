@@ -7,4 +7,92 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="LoadingIndicatorStyle">
+        <item name="android:layout_width">@dimen/progressbar_size</item>
+        <item name="android:layout_height">@dimen/progressbar_size</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:visibility">invisible</item>
+    </style>
+
+    <style name="RatingStarStyle">
+        <item name="android:layout_width">@dimen/star_size</item>
+        <item name="android:layout_height">@dimen/star_size</item>
+        <item name="android:src">@drawable/ic_star_border_red_32dp</item>
+    </style>
+
+    <style name="TitleTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">@dimen/item_name_text_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="ButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:tint">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="EditButtonStyle" parent="ButtonStyle">
+        <item name="android:src">@drawable/ic_baseline_edit_24</item>
+    </style>
+
+    <style name="DeleteButtonStyle" parent="ButtonStyle">
+        <item name="android:src">@drawable/ic_baseline_delete_24</item>
+    </style>
+
+    <style name="LabelTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/default_padding</item>
+        <item name="android:textSize">@dimen/d_date_text_size</item>
+    </style>
+
+    <style name="DateTextStyle" parent="LabelTextStyle">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="RefreshMessageTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">@dimen/default_padding</item>
+        <item name="android:textSize">@dimen/message_text_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:lineSpacingExtra">@dimen/default_padding</item>
+    </style>
+
+    <style name="EmptyMessageTextStyle" parent="RefreshMessageTextStyle">
+        <item name="android:visibility">invisible</item>
+    </style>
+
+    <style name="PickerStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/number_picker_height</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginTop">@dimen/small_padding</item>
+        <item name="android:descendantFocusability">blocksDescendants</item>
+    </style>
+
+    <style name="PickerLabelStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:padding">@dimen/small_padding</item>
+    </style>
+
+    <style name="PickerLayoutStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">vertical</item>
+    </style>
 </resources>

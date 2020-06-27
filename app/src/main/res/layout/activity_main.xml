@@ -55,20 +55,12 @@
 
             <TextView
                 android:id="@+id/tv_empty_message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/default_padding"
-                android:text="@string/empty_item_message"
-                android:textSize="@dimen/message_text_size"
-                android:visibility="invisible" />
+                style="@style/EmptyMessageTextStyle"
+                android:text="@string/empty_item_message" />
 
             <ProgressBar
                 android:id="@+id/pb_loading_indicator"
-                android:layout_width="@dimen/progressbar_size"
-                android:layout_height="@dimen/progressbar_size"
-                android:layout_gravity="center"
-                android:visibility="invisible" />
+                style="@style/LoadingIndicatorStyle" />
         </FrameLayout>
     </LinearLayout>
 </layout>

@@ -20,35 +20,21 @@
 
                 <TextView
                     android:id="@+id/tv_purchase_item_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    style="@style/TitleTextStyle"
                     android:layout_margin="@dimen/default_padding"
                     android:layout_toStartOf="@id/iv_edit"
                     android:layout_toLeftOf="@id/iv_edit"
-                    android:padding="@dimen/default_padding"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="@dimen/item_name_text_size"
-                    android:textStyle="bold"
                     tools:text="Purchase Item A" />
 
                 <ImageView
                     android:id="@+id/iv_edit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/EditButtonStyle"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/title_layout_padding"
                     android:layout_marginRight="@dimen/title_layout_padding"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:contentDescription="@string/edit_item"
-                    android:focusable="true"
-                    android:padding="@dimen/default_padding"
-                    android:src="@drawable/ic_baseline_edit_24"
-                    android:tint="@color/colorPrimaryDark" />
+                    android:contentDescription="@string/edit_item" />
             </RelativeLayout>
 
             <LinearLayout
@@ -58,17 +44,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/default_padding"
+                    style="@style/LabelTextStyle"
                     android:text="@string/purchase_term" />
 
                 <TextView
                     android:id="@+id/tv_purchase_term"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/default_padding"
-                    android:textColor="@android:color/black"
+                    style="@style/DateTextStyle"
                     tools:text="25 days" />
             </LinearLayout>
 
@@ -79,17 +60,12 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/default_padding"
+                    style="@style/LabelTextStyle"
                     android:text="@string/next_purchase_date" />
 
                 <TextView
                     android:id="@+id/tv_next_purchase_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/default_padding"
-                    android:textColor="@android:color/black"
+                    style="@style/DateTextStyle"
                     tools:text="20-07-15 (D-5)" />
             </LinearLayout>
         </LinearLayout>
@@ -115,13 +91,8 @@
 
                 <TextView
                     android:id="@+id/tv_refresh_message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/default_padding"
-                    android:gravity="center"
-                    android:text="@string/refresh_message"
-                    android:textSize="@dimen/message_text_size" />
+                    style="@style/RefreshMessageTextStyle"
+                    android:text="@string/refresh_message" />
 
                 <ImageView
                     android:id="@+id/iv_refresh"
@@ -136,10 +107,7 @@
 
             <ProgressBar
                 android:id="@+id/pb_loading_indicator"
-                android:layout_width="@dimen/progressbar_size"
-                android:layout_height="@dimen/progressbar_size"
-                android:layout_gravity="center"
-                android:visibility="invisible" />
+                style="@style/LoadingIndicatorStyle" />
         </FrameLayout>
     </LinearLayout>
 </layout>

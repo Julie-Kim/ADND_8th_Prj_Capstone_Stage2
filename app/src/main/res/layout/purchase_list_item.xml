@@ -15,45 +15,24 @@
 
             <TextView
                 android:id="@+id/tv_purchase_item_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/TitleTextStyle"
                 android:layout_toStartOf="@id/iv_edit"
                 android:layout_toLeftOf="@id/iv_edit"
-                android:padding="@dimen/default_padding"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/item_name_text_size"
-                android:textStyle="bold"
                 tools:text="Purchase Item A" />
 
             <ImageView
                 android:id="@+id/iv_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                style="@style/EditButtonStyle"
                 android:layout_toStartOf="@id/iv_delete"
                 android:layout_toLeftOf="@id/iv_delete"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:contentDescription="@string/edit_item"
-                android:focusable="true"
-                android:padding="@dimen/default_padding"
-                android:src="@drawable/ic_baseline_edit_24"
-                android:tint="@color/colorPrimaryDark" />
+                android:contentDescription="@string/edit_item" />
 
             <ImageView
                 android:id="@+id/iv_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/DeleteButtonStyle"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:contentDescription="@string/delete_item"
-                android:focusable="true"
-                android:padding="@dimen/default_padding"
-                android:src="@drawable/ic_baseline_delete_24"
-                android:tint="@color/colorPrimaryDark" />
+                android:contentDescription="@string/delete_item" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -62,24 +41,18 @@
 
             <TextView
                 android:id="@+id/tv_next_purchase_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/LabelTextStyle"
                 android:layout_toStartOf="@id/tv_d_day"
                 android:layout_toLeftOf="@id/tv_d_day"
                 android:gravity="center|end"
-                android:padding="@dimen/default_padding"
-                android:text="@string/next_purchase_date"
-                android:textSize="@dimen/d_date_text_size" />
+                android:text="@string/next_purchase_date" />
 
             <TextView
                 android:id="@+id/tv_d_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/DateTextStyle"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:gravity="center|end"
-                android:padding="@dimen/default_padding"
-                android:textSize="@dimen/d_date_text_size"
                 tools:text="20-07-15 (D-5)" />
         </RelativeLayout>
     </LinearLayout>
