@@ -33,6 +33,9 @@ public interface PurchaseItemDao {
     @Query("SELECT * FROM purchase_item WHERE _id = :id")
     PurchaseItem loadPurchaseItemById(int id);
 
+    @Query("SELECT * FROM purchase_item WHERE _id = :id")
+    LiveData<PurchaseItem> loadLivePurchaseItemById(int id);
+
     @Query("UPDATE purchase_item SET item_name = :name, purchase_term_year=:year, " +
             "purchase_term_month=:month, purchase_term_day=:day, last_purchased_date=:date WHERE _id = :id")
     void updatePurchaseItem(int id, String name, int year, int month, int day, String date);

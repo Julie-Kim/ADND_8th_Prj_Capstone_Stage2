@@ -67,6 +67,9 @@ public class Product implements Parcelable {
     }
 
     public String getPrice() {
+        if (mPrices == null || mPrices.isEmpty()) {
+            return "";
+        }
         return mPrices.get(0).getRaw();
     }
 

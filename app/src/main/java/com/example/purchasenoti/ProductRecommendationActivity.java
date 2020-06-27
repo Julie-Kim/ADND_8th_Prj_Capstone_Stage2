@@ -7,8 +7,11 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.purchasenoti.database.PurchaseItemDatabase;
@@ -16,6 +19,7 @@ import com.example.purchasenoti.databinding.ActivityProductRecommendationBinding
 import com.example.purchasenoti.model.Product;
 import com.example.purchasenoti.model.PurchaseItem;
 import com.example.purchasenoti.model.SearchResults;
+import com.example.purchasenoti.utilities.DateUtils;
 import com.example.purchasenoti.utilities.EditDialogUtils;
 import com.example.purchasenoti.utilities.JsonQueryUtils;
 import com.example.purchasenoti.utilities.RetrofitConnection;
@@ -28,14 +32,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProductRecommendationActivity extends AppCompatActivity implements ProductListAdapter.ProductOnClickHandler {
-    public static final String TAG = ProductRecommendationActivity.class.getSimpleName();
+    private static final String TAG = ProductRecommendationActivity.class.getSimpleName();
 
     private ActivityProductRecommendationBinding mBinding;
     private ProductListAdapter mAdapter;
 
-    private String mItemName;
+    private PurchaseItem mPurchaseItem;
 
     private PurchaseItemDatabase mDb;
+    private ItemViewModel mViewModel;
+    private Observer<PurchaseItem> mObserver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,31 +55,39 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
             return;
         }
 
-        if (intent.hasExtra(ItemConstant.KEY_ID)) {
-            int id = intent.getIntExtra(ItemConstant.KEY_ID, 0);
+        if (intent.hasExtra(ItemConstant.KEY_PURCHASE_ITEM)) {
+            mPurchaseItem = intent.getParcelableExtra(ItemConstant.KEY_PURCHASE_ITEM);
 
-            mBinding.ivEdit.setOnClickListener(v -> AppExecutors.getInstance().diskIO().execute(() -> {
-                Log.d(TAG, "onCreate() Edit click, item id: " + id);
+            if (mPurchaseItem != null) {
+                updatePurchaseItemInfo(mPurchaseItem);
 
-                PurchaseItem currentItem = mDb.purchaseDao().loadPurchaseItemById(id);
-                AppExecutors.getInstance().mainThread().execute(() ->
-                        EditDialogUtils.showItemInputDialog(this, mDb.purchaseDao(), currentItem));
-            }));
-        }
+                int id = mPurchaseItem.getId();
+                Log.d(TAG, "onCreate() purchase item id: " + id);
 
-        if (intent.hasExtra(ItemConstant.KEY_ITEM_NAME)) {
-            mItemName = intent.getStringExtra(ItemConstant.KEY_ITEM_NAME);
-            Log.d(TAG, "onCreate() purchase item name: " + mItemName);
+                mBinding.ivEdit.setOnClickListener(v -> AppExecutors.getInstance().diskIO().execute(() -> {
+                    Log.d(TAG, "onCreate() Edit click, item id: " + id);
 
-            mBinding.tvPurchaseItemName.setText(mItemName);
-        }
+                    PurchaseItem currentItem = mDb.purchaseDao().loadPurchaseItemById(id);
 
-        if (intent.hasExtra(ItemConstant.KEY_PURCHASE_TERM)) {
-            mBinding.tvPurchaseTerm.setText(intent.getStringExtra(ItemConstant.KEY_PURCHASE_TERM));
-        }
+                    AppExecutors.getInstance().mainThread().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder builder = EditDialogUtils.getItemInputDialog(
+                                    ProductRecommendationActivity.this, mDb.purchaseDao(), currentItem);
 
-        if (intent.hasExtra(ItemConstant.KEY_NEXT_PURCHASED_DATE)) {
-            mBinding.tvNextPurchaseDate.setText(intent.getStringExtra(ItemConstant.KEY_NEXT_PURCHASED_DATE));
+                            builder.setOnDismissListener(dialog -> {
+                                ItemViewModelFactory factory = new ItemViewModelFactory(mDb, id);
+                                mViewModel = new ViewModelProvider(ProductRecommendationActivity.this, factory).get(ItemViewModel.class);
+                                mObserver = getObserver();
+
+                                mViewModel.getItem().observe(ProductRecommendationActivity.this, mObserver);
+                            });
+
+                            builder.show();
+                        }
+                    });
+                }));
+            }
         }
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -83,12 +97,36 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
         mAdapter = new ProductListAdapter(this);
         mBinding.rvProductList.setAdapter(mAdapter);
 
-        mBinding.ivRefresh.setOnClickListener(v -> loadProductList());
+        mBinding.ivRefresh.setOnClickListener(v -> loadProductList(mPurchaseItem.getItemName()));
 
-        loadProductList();
+        loadProductList(mPurchaseItem.getItemName());
     }
 
-    private void loadProductList() {
+    private Observer<PurchaseItem> getObserver() {
+        return purchaseItem -> {
+            Log.d(TAG, "onChanged() load item data from database. item name: " + purchaseItem.getItemName());
+            String prevItemName = mPurchaseItem.getItemName();
+
+            updatePurchaseItemInfo(purchaseItem);
+
+            if (!prevItemName.equals(purchaseItem.getItemName())) {
+                loadProductList(purchaseItem.getItemName());
+            }
+        };
+    }
+
+    private void updatePurchaseItemInfo(PurchaseItem purchaseItem) {
+        mPurchaseItem = purchaseItem;
+
+        mBinding.tvPurchaseItemName.setText(mPurchaseItem.getItemName());
+
+        mBinding.tvPurchaseTerm.setText(DateUtils.getTermString(ProductRecommendationActivity.this,
+                mPurchaseItem.getPurchaseTermYear(), mPurchaseItem.getPurchaseTermMonth(), mPurchaseItem.getPurchaseTermDay()));
+
+        mBinding.tvNextPurchaseDate.setText(mPurchaseItem.getNextPurchaseDate());
+    }
+
+    private void loadProductList(String itemName) {
         showOrHideLoadingIndicator(true);
         showOrHideProductList(true);
 
@@ -97,7 +135,7 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
                 JsonQueryUtils.getApiKey(),
                 JsonQueryUtils.getQueryType(),
                 JsonQueryUtils.getAmazonDomain(),
-                mItemName,
+                itemName,
                 JsonQueryUtils.getSortBy()
         );
 
@@ -161,5 +199,12 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
     private void showOrHideProductList(boolean show) {
         mBinding.refreshLayout.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
         mBinding.rvProductList.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        mViewModel.getItem().removeObserver(mObserver);
     }
 }

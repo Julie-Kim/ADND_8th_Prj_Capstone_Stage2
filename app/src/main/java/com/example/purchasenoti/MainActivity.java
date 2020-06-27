@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.purchasenoti.database.PurchaseItemDatabase;
 import com.example.purchasenoti.databinding.ActivityMainBinding;
 import com.example.purchasenoti.model.PurchaseItem;
-import com.example.purchasenoti.utilities.DateUtils;
 import com.example.purchasenoti.utilities.EditDialogUtils;
 
 import java.util.ArrayList;
@@ -53,11 +52,7 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
     @Override
     public void onItemClick(PurchaseItem purchaseItem) {
         Intent intent = new Intent(this, ProductRecommendationActivity.class);
-        intent.putExtra(ItemConstant.KEY_ID, purchaseItem.getId());
-        intent.putExtra(ItemConstant.KEY_ITEM_NAME, purchaseItem.getItemName());
-        intent.putExtra(ItemConstant.KEY_PURCHASE_TERM, DateUtils.getTermString(this,
-                purchaseItem.getPurchaseTermYear(), purchaseItem.getPurchaseTermMonth(), purchaseItem.getPurchaseTermDay()));
-        intent.putExtra(ItemConstant.KEY_NEXT_PURCHASED_DATE, purchaseItem.getNextPurchaseDate());
+        intent.putExtra(ItemConstant.KEY_PURCHASE_ITEM, purchaseItem);
         startActivity(intent);
     }
 

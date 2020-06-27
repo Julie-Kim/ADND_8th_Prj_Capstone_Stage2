@@ -97,25 +97,25 @@ public class DateUtils {
         StringBuilder termString = new StringBuilder();
 
         if (year > 1) {
-            termString.append(year).append(context.getString(R.string.years)).append(" ");
+            termString.append(year).append(" ").append(context.getString(R.string.years)).append("  ");
         } else if (year == 1) {
-            termString.append(year).append(context.getString(R.string.year)).append(" ");
+            termString.append(year).append(" ").append(context.getString(R.string.year)).append("  ");
         }
 
         if (month > 1) {
-            termString.append(month).append(context.getString(R.string.months)).append(" ");
+            termString.append(month).append(" ").append(context.getString(R.string.months)).append("  ");
         } else if (month == 1) {
-            termString.append(month).append(context.getString(R.string.month)).append(" ");
+            termString.append(month).append(" ").append(context.getString(R.string.month)).append("  ");
         }
 
         if (day > 1) {
-            termString.append(day).append(context.getString(R.string.days)).append(" ");
+            termString.append(day).append(" ").append(context.getString(R.string.days)).append("  ");
         } else if (day == 1) {
-            termString.append(day).append(context.getString(R.string.day)).append(" ");
+            termString.append(day).append(" ").append(context.getString(R.string.day)).append("  ");
         }
 
         if (TextUtils.isEmpty(termString)) {
-            termString.append(day).append(context.getString(R.string.day));
+            termString.append(day).append(" ").append(context.getString(R.string.day));
         }
 
         return termString.toString();

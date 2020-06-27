@@ -18,9 +18,13 @@ import com.example.purchasenoti.model.PurchaseItem;
 import java.util.Calendar;
 
 public class EditDialogUtils {
-    public static final String TAG = EditDialogUtils.class.getSimpleName();
+    private static final String TAG = EditDialogUtils.class.getSimpleName();
 
     public static void showItemInputDialog(Activity activity, PurchaseItemDao dao, PurchaseItem currentItem) {
+        getItemInputDialog(activity, dao, currentItem).show();
+    }
+
+    public static AlertDialog.Builder getItemInputDialog(Activity activity, PurchaseItemDao dao, PurchaseItem currentItem) {
         ItemInputDialogBinding dialogBinding = DataBindingUtil.inflate(activity.getLayoutInflater(),
                 R.layout.item_input_dialog, null, false);
 
@@ -47,7 +51,7 @@ public class EditDialogUtils {
         builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
             Editable itemNameInput = dialogBinding.inputItemName.getText();
             if (TextUtils.isEmpty(itemNameInput)) {
-                Log.e(TAG, "showItemInputDialog() positiveButton click, item name is empty.");
+                Log.e(TAG, "getItemInputDialog() positiveButton click, item name is empty.");
                 Toast.makeText(activity, R.string.item_name_error, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -62,7 +66,7 @@ public class EditDialogUtils {
 
             String lastPurchasedDate = DateUtils.getDate(dialogBinding.datePicker);
             PurchaseItem purchaseItem = new PurchaseItem(itemName, year, month, day, lastPurchasedDate);
-            Log.d(TAG, "showItemInputDialog() positiveButton click, item: " + purchaseItem.toString());
+            Log.d(TAG, "getItemInputDialog() positiveButton click, item: " + purchaseItem.toString());
 
             AppExecutors.getInstance().diskIO().execute(() -> {
                 if (currentItem != null) {
@@ -76,7 +80,7 @@ public class EditDialogUtils {
 
         builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
 
-        builder.show();
+        return builder;
     }
 
     private static void initPurchaseTermPicker(ItemInputDialogBinding dialogBinding) {
