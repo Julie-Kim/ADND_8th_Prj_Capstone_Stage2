@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +25,7 @@ import com.example.purchasenoti.model.SearchResults;
 import com.example.purchasenoti.utilities.DateUtils;
 import com.example.purchasenoti.utilities.EditDialogUtils;
 import com.example.purchasenoti.utilities.JsonQueryUtils;
+import com.example.purchasenoti.utilities.PreferenceUtils;
 import com.example.purchasenoti.utilities.RetrofitConnection;
 import com.example.purchasenoti.utilities.RetrofitInterface;
 
@@ -97,9 +101,9 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
         mAdapter = new ProductListAdapter(this);
         mBinding.rvProductList.setAdapter(mAdapter);
 
-        mBinding.ivRefresh.setOnClickListener(v -> loadProductList(mPurchaseItem.getItemName()));
+        mBinding.ivRefresh.setOnClickListener(v -> loadProductList());
 
-        loadProductList(mPurchaseItem.getItemName());
+        loadProductList();
     }
 
     private Observer<PurchaseItem> getObserver() {
@@ -126,6 +130,10 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
         mBinding.tvNextPurchaseDate.setText(mPurchaseItem.getNextPurchaseDate());
     }
 
+    private void loadProductList() {
+        loadProductList(mPurchaseItem.getItemName());
+    }
+
     private void loadProductList(String itemName) {
         showOrHideLoadingIndicator(true);
         showOrHideProductList(true);
@@ -134,9 +142,9 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
         Call<SearchResults> call = retrofitInterface.geProductList(
                 JsonQueryUtils.getApiKey(),
                 JsonQueryUtils.getQueryType(),
-                JsonQueryUtils.getAmazonDomain(),
+                JsonQueryUtils.getAmazonDomain(this),
                 itemName,
-                JsonQueryUtils.getSortBy()
+                JsonQueryUtils.getSortBy(this)
         );
 
         call.enqueue(new Callback<SearchResults>() {
@@ -208,5 +216,59 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
         if (mViewModel != null) {
             mViewModel.getItem().removeObserver(mObserver);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.query_setting, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_domain:
+                showAmazonDomainSelectionDialog();
+                return true;
+
+            case R.id.action_sort_by:
+                showSortBySelectionDialog();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showAmazonDomainSelectionDialog() {
+        int checkedItem = PreferenceUtils.getAmazonDomainSettingValue(this);
+        Log.d(TAG, "showAmazonDomainSelectionDialog() checked item: " + checkedItem);
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle(R.string.action_amazon_domain)
+                .setSingleChoiceItems(R.array.amazon_domain_setting_strings,
+                        checkedItem,
+                        (dialog1, which) -> {
+                            Log.d(TAG, "showAmazonDomainSelectionDialog() clicked item: " + which);
+                            PreferenceUtils.setAmazonDomainSettingValue(this, which);
+                        })
+                .setPositiveButton(android.R.string.ok, (dialog12, which) -> loadProductList()).create()
+                .show();
+    }
+
+    private void showSortBySelectionDialog() {
+        int checkedItem = PreferenceUtils.getSortBySettingValue(this);
+        Log.d(TAG, "showSortBySelectionDialog() checked item: " + checkedItem);
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle(R.string.action_sort_by)
+                .setSingleChoiceItems(R.array.sort_by_setting_strings,
+                        checkedItem,
+                        (dialog1, which) -> {
+                            Log.d(TAG, "showSortBySelectionDialog() clicked item: " + which);
+                            PreferenceUtils.setSortBySettingValue(this, which);
+                        })
+                .setPositiveButton(android.R.string.ok, (dialog12, which) -> loadProductList()).create()
+                .show();
     }
 }

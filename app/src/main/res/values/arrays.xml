@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="amazon_domain_setting_strings">
+        <item>@string/australia</item>
+        <item>@string/brazil</item>
+        <item>@string/canada</item>
+        <item>@string/france</item>
+        <item>@string/germany</item>
+        <item>@string/india</item>
+        <item>@string/italy</item>
+        <item>@string/japan</item>
+        <item>@string/mexico</item>
+        <item>@string/netherlands</item>
+        <item>@string/spain</item>
+        <item>@string/uae</item>
+        <item>@string/united_kingdom</item>
+        <item>@string/united_states</item>
+    </string-array>
+
+    <string-array name="sort_by_setting_strings">
+        <item>@string/most_recent</item>
+        <item>@string/price_low_to_high</item>
+        <item>@string/price_high_to_low</item>
+        <item>@string/featured</item>
+        <item>@string/average_review</item>
+    </string-array>
+</resources>

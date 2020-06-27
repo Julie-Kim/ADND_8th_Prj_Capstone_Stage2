@@ -23,4 +23,25 @@
     <string name="day">day </string>
     <string name="refresh_message">There was an error getting the product list.\nPlease enter refresh button.</string>
     <string name="refresh">Refresh button</string>
+    <string name="action_amazon_domain">Amazon domain</string>
+    <string name="action_sort_by">Sort by</string>
+    <string name="most_recent">Most recent</string>
+    <string name="price_low_to_high">Price low to high</string>
+    <string name="price_high_to_low">Price high to low</string>
+    <string name="featured">Featured</string>
+    <string name="average_review">Average review</string>
+    <string name="australia">Australia</string>
+    <string name="brazil">Brazil</string>
+    <string name="canada">Canada</string>
+    <string name="france">France</string>
+    <string name="germany">Germany</string>
+    <string name="india">India</string>
+    <string name="italy">Italy</string>
+    <string name="japan">Japan</string>
+    <string name="mexico">Mexico</string>
+    <string name="netherlands">Netherlands</string>
+    <string name="spain">Spain</string>
+    <string name="uae">UAE</string>
+    <string name="united_kingdom">United Kingdom</string>
+    <string name="united_states">United States</string>
 </resources>

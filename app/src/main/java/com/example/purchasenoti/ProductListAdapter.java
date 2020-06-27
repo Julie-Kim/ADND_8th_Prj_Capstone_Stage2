@@ -45,7 +45,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         @Override
         public void onClick(View v) {
             Product product = mProductList.get(getAdapterPosition());
-            Log.d(TAG, "onClick(), clicked product: " + product.toString());    //TODO
+            Log.d(TAG, "onClick(), clicked product: " + product.toString());
 
             mOnClickHandler.onClick(product);
         }
