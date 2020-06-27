@@ -205,6 +205,8 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
     protected void onDestroy() {
         super.onDestroy();
 
-        mViewModel.getItem().removeObserver(mObserver);
+        if (mViewModel != null) {
+            mViewModel.getItem().removeObserver(mObserver);
+        }
     }
 }
