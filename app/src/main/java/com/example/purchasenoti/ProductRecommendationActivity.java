@@ -11,9 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.purchasenoti.database.PurchaseItemDatabase;
 import com.example.purchasenoti.databinding.ActivityProductRecommendationBinding;
 import com.example.purchasenoti.model.Product;
+import com.example.purchasenoti.model.PurchaseItem;
 import com.example.purchasenoti.model.SearchResults;
+import com.example.purchasenoti.utilities.EditDialogUtils;
 import com.example.purchasenoti.utilities.JsonQueryUtils;
 import com.example.purchasenoti.utilities.RetrofitConnection;
 import com.example.purchasenoti.utilities.RetrofitInterface;
@@ -32,15 +35,30 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
 
     private String mItemName;
 
+    private PurchaseItemDatabase mDb;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_product_recommendation);
+        mDb = PurchaseItemDatabase.getInstance(this);
 
         Intent intent = getIntent();
         if (intent == null) {
             Log.e(TAG, "onCreate() intent is null.");
             return;
+        }
+
+        if (intent.hasExtra(ItemConstant.KEY_ID)) {
+            int id = intent.getIntExtra(ItemConstant.KEY_ID, 0);
+
+            mBinding.ivEdit.setOnClickListener(v -> AppExecutors.getInstance().diskIO().execute(() -> {
+                Log.d(TAG, "onCreate() Edit click, item id: " + id);
+
+                PurchaseItem currentItem = mDb.purchaseDao().loadPurchaseItemById(id);
+                AppExecutors.getInstance().mainThread().execute(() ->
+                        EditDialogUtils.showItemInputDialog(this, mDb.purchaseDao(), currentItem));
+            }));
         }
 
         if (intent.hasExtra(ItemConstant.KEY_ITEM_NAME)) {
@@ -65,11 +83,14 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
         mAdapter = new ProductListAdapter(this);
         mBinding.rvProductList.setAdapter(mAdapter);
 
+        mBinding.ivRefresh.setOnClickListener(v -> loadProductList());
+
         loadProductList();
     }
 
     private void loadProductList() {
         showOrHideLoadingIndicator(true);
+        showOrHideProductList(true);
 
         RetrofitInterface retrofitInterface = RetrofitConnection.getRetrofitInstance().create(RetrofitInterface.class);
         Call<SearchResults> call = retrofitInterface.geProductList(
@@ -92,24 +113,21 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
 
                     if (productList == null || productList.isEmpty()) {
                         Log.d(TAG, "onResponse() productList is empty.");
-
-                        showOrHideLoadingIndicator(false);
+                        updateProductList(null);
                     } else {
                         Log.d(TAG, "onResponse() size of productList: " + productList.size());
-
                         updateProductList(productList);
                     }
                 } else {
-                    showOrHideLoadingIndicator(false);
                     Log.e(TAG, "onResponse() response is not successful.");
+                    updateProductList(null);
                 }
             }
 
             @Override
             public void onFailure(Call<SearchResults> call, Throwable t) {
-                showOrHideLoadingIndicator(false);
-
                 Log.e(TAG, "onFailure() : " + t.toString());
+                updateProductList(null);
             }
         });
     }
@@ -141,7 +159,7 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
     }
 
     private void showOrHideProductList(boolean show) {
-        mBinding.tvEmptyMessage.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+        mBinding.refreshLayout.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
         mBinding.rvProductList.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
     }
 }

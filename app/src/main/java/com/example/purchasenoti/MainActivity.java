@@ -2,13 +2,9 @@ package com.example.purchasenoti;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,12 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.purchasenoti.database.PurchaseItemDatabase;
 import com.example.purchasenoti.databinding.ActivityMainBinding;
-import com.example.purchasenoti.databinding.ItemInputDialogBinding;
 import com.example.purchasenoti.model.PurchaseItem;
 import com.example.purchasenoti.utilities.DateUtils;
+import com.example.purchasenoti.utilities.EditDialogUtils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements PurchaseItemListAdapter.PurchaseItemOnClickHandler {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -47,12 +42,8 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
 
         loadPurchaseItemList();
 
-        mBinding.btAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showItemInputDialog(null);
-            }
-        });
+        mBinding.btAdd.setOnClickListener(v ->
+                EditDialogUtils.showItemInputDialog(this, mDb.purchaseDao(), null));
     }
 
     private void loadPurchaseItemList() {
@@ -77,7 +68,8 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
             Log.d(TAG, "onEdit() id: " + id);
 
             PurchaseItem currentItem = mDb.purchaseDao().loadPurchaseItemById(id);
-            AppExecutors.getInstance().mainThread().execute(() -> showItemInputDialog(currentItem));
+            AppExecutors.getInstance().mainThread().execute(() ->
+                    EditDialogUtils.showItemInputDialog(this, mDb.purchaseDao(), currentItem));
         });
     }
 
@@ -89,79 +81,6 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
 
             mDb.purchaseDao().deleteById(id);
         });
-    }
-
-    private void showItemInputDialog(PurchaseItem currentItem) {
-        ItemInputDialogBinding dialogBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.item_input_dialog, null, false);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.enter_purchase_item);
-        builder.setView(dialogBinding.getRoot());
-
-        initPurchaseTermPicker(dialogBinding);
-
-        if (currentItem != null) {
-            dialogBinding.inputItemName.setText(currentItem.getItemName());
-
-            dialogBinding.yearPicker.setValue(currentItem.getPurchaseTermYear());
-            dialogBinding.monthPicker.setValue(currentItem.getPurchaseTermMonth());
-            dialogBinding.dayPicker.setValue(currentItem.getPurchaseTermDay());
-
-            Calendar calendar = DateUtils.getCalendar(currentItem.getLastPurchasedDate());
-            if (calendar != null) {
-                dialogBinding.datePicker.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DATE), null);
-            }
-        }
-
-        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-            Editable itemNameInput = dialogBinding.inputItemName.getText();
-            if (TextUtils.isEmpty(itemNameInput)) {
-                Log.e(TAG, "showItemInputDialog() item name is empty.");
-                Toast.makeText(this, R.string.item_name_error, Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            dialog.dismiss();
-
-            String itemName = itemNameInput.toString();
-
-            int year = dialogBinding.yearPicker.getValue();
-            int month = dialogBinding.monthPicker.getValue();
-            int day = dialogBinding.dayPicker.getValue();
-
-            String lastPurchasedDate = DateUtils.getDate(dialogBinding.datePicker);
-            PurchaseItem purchaseItem = new PurchaseItem(itemName, year, month, day, lastPurchasedDate);
-            Log.d(TAG, "showItemInputDialog() onClick, item: " + purchaseItem.toString());
-
-            AppExecutors.getInstance().diskIO().execute(() -> {
-                if (currentItem != null) {
-                    mDb.purchaseDao().updatePurchaseItem(currentItem.getId(),
-                            itemName, year, month, day, lastPurchasedDate);
-                } else {
-                    mDb.purchaseDao().insertPurchaseItem(purchaseItem);
-                }
-            });
-        });
-
-        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
-
-        builder.show();
-    }
-
-    private void initPurchaseTermPicker(ItemInputDialogBinding dialogBinding) {
-        dialogBinding.yearPicker.setMinValue(0);
-        dialogBinding.yearPicker.setMaxValue(20);
-        dialogBinding.yearPicker.setWrapSelectorWheel(false);
-
-        dialogBinding.monthPicker.setMinValue(0);
-        dialogBinding.monthPicker.setMaxValue(11);
-        dialogBinding.monthPicker.setWrapSelectorWheel(false);
-
-        dialogBinding.dayPicker.setMinValue(0);
-        dialogBinding.dayPicker.setMaxValue(30);
-        dialogBinding.dayPicker.setValue(1);
-        dialogBinding.dayPicker.setWrapSelectorWheel(false);
     }
 
     private void setupViewModel() {

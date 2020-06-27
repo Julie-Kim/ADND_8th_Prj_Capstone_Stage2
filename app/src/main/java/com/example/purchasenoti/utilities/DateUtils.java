@@ -97,25 +97,25 @@ public class DateUtils {
         StringBuilder termString = new StringBuilder();
 
         if (year > 1) {
-            termString.append(year).append(context.getString(R.string.years_space));
+            termString.append(year).append(context.getString(R.string.years)).append(" ");
         } else if (year == 1) {
-            termString.append(year).append(context.getString(R.string.year_space));
+            termString.append(year).append(context.getString(R.string.year)).append(" ");
         }
 
         if (month > 1) {
-            termString.append(month).append(context.getString(R.string.months_space));
+            termString.append(month).append(context.getString(R.string.months)).append(" ");
         } else if (month == 1) {
-            termString.append(month).append(context.getString(R.string.month_space));
+            termString.append(month).append(context.getString(R.string.month)).append(" ");
         }
 
         if (day > 1) {
-            termString.append(day).append(context.getString(R.string.days_space));
+            termString.append(day).append(context.getString(R.string.days)).append(" ");
         } else if (day == 1) {
-            termString.append(day).append(context.getString(R.string.day_space));
+            termString.append(day).append(context.getString(R.string.day)).append(" ");
         }
 
         if (TextUtils.isEmpty(termString)) {
-            termString.append(day).append(context.getString(R.string.day_space));
+            termString.append(day).append(context.getString(R.string.day));
         }
 
         return termString.toString();
