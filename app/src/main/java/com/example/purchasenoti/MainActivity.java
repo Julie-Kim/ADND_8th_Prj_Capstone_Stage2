@@ -1,5 +1,7 @@
 package com.example.purchasenoti;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,9 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.purchasenoti.database.PurchaseItemDatabase;
 import com.example.purchasenoti.databinding.ActivityMainBinding;
 import com.example.purchasenoti.model.PurchaseItem;
+import com.example.purchasenoti.utilities.DateUtils;
 import com.example.purchasenoti.utilities.EditDialogUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements PurchaseItemListAdapter.PurchaseItemOnClickHandler {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -87,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
         MainViewModel viewModel = new ViewModelProvider(this, mViewModelFactory).get(MainViewModel.class);
 
         viewModel.getmPurchaseItems().observe(this, purchaseItems -> {
-            Log.d(TAG, "Updating list of purchase items from LiveData in ViewModel");
+            Log.d(TAG, "setupViewModel() observe, Updating list of purchase items from LiveData in ViewModel");
             showOrHideLoadingIndicator(false);
 
             if (purchaseItems.isEmpty()) {
@@ -95,6 +99,10 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
             } else {
                 showOrHidePurchaseItems(true);
                 mAdapter.setPurchaseItemList(new ArrayList<>(purchaseItems));
+
+                for (PurchaseItem item : purchaseItems) {
+                    setNotification(item);
+                }
             }
         });
     }
@@ -106,5 +114,32 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
     private void showOrHidePurchaseItems(boolean show) {
         mBinding.tvEmptyMessage.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
         mBinding.rvPurchaseItemList.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private void setNotification(PurchaseItem purchaseItem) {
+        String nextDate = purchaseItem.getNextPurchaseDate();
+        if (DateUtils.getDiffDay(nextDate) < 0) {
+            Log.d(TAG, "setNotification() not future alarm, no notification.");
+            return;
+        }
+
+        Calendar calendar = DateUtils.getDate(purchaseItem.getNextPurchaseDate());
+        Log.d(TAG, "setNotification() item: " + purchaseItem);
+        if (calendar == null) {
+            Log.e(TAG, "setNotification() calendar is null, no notification.");
+            return;
+        }
+        Log.d(TAG, "setNotification() next date: " + calendar.getTime());
+
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        intent.putExtra(ItemConstant.KEY_ITEM_NAME, purchaseItem.getItemName());
+        intent.putExtra(ItemConstant.KEY_ITEM_ID, purchaseItem.getId());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
     }
 }

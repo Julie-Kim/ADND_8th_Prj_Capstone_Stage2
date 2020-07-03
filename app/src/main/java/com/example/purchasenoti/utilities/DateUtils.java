@@ -18,7 +18,17 @@ public class DateUtils {
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final long MILLIS_PER_DAY = 24 * 60 * 60 * 1000;
 
-    public static String getNextDate(String date, int year, int month, int day) {
+    public static String getNextDateString(String date, int year, int month, int day) {
+        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
+        Calendar calendar = getNextDate(date, year, month, day);
+
+        if (calendar != null) {
+            return formatter.format(calendar.getTime());
+        }
+        return "";
+    }
+
+    public static Calendar getNextDate(String date, int year, int month, int day) {
         try {
             SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
             Date lastDate = formatter.parse(date);
@@ -30,13 +40,32 @@ public class DateUtils {
                 calendar.add(Calendar.YEAR, year);
                 calendar.add(Calendar.MONTH, month);
                 calendar.add(Calendar.DATE, day);
+                calendar.add(Calendar.HOUR_OF_DAY, 9);
+                calendar.add(Calendar.MINUTE, 0);
+                calendar.add(Calendar.SECOND, 0);
 
-                return formatter.format(calendar.getTime());
+                return calendar;
             }
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return "";
+        return null;
+    }
+
+    public static Calendar getDate(String dateString) {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
+            Date date = formatter.parse(dateString);
+
+            if (date != null) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                return calendar;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static long getDiffDay(String date) {

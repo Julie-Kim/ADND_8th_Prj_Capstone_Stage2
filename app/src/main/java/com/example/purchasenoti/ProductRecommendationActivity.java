@@ -73,22 +73,19 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
 
                     PurchaseItem currentItem = mDb.purchaseDao().loadPurchaseItemById(id);
 
-                    AppExecutors.getInstance().mainThread().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            AlertDialog.Builder builder = EditDialogUtils.getItemInputDialog(
-                                    ProductRecommendationActivity.this, mDb.purchaseDao(), currentItem);
+                    AppExecutors.getInstance().mainThread().execute(() -> {
+                        AlertDialog.Builder builder = EditDialogUtils.getItemInputDialog(
+                                ProductRecommendationActivity.this, mDb.purchaseDao(), currentItem);
 
-                            builder.setOnDismissListener(dialog -> {
-                                ItemViewModelFactory factory = new ItemViewModelFactory(mDb, id);
-                                mViewModel = new ViewModelProvider(ProductRecommendationActivity.this, factory).get(ItemViewModel.class);
-                                mObserver = getObserver();
+                        builder.setOnDismissListener(dialog -> {
+                            ItemViewModelFactory factory = new ItemViewModelFactory(mDb, id);
+                            mViewModel = new ViewModelProvider(ProductRecommendationActivity.this, factory).get(ItemViewModel.class);
+                            mObserver = getObserver();
 
-                                mViewModel.getItem().observe(ProductRecommendationActivity.this, mObserver);
-                            });
+                            mViewModel.getItem().observe(ProductRecommendationActivity.this, mObserver);
+                        });
 
-                            builder.show();
-                        }
+                        builder.show();
                     });
                 }));
             }

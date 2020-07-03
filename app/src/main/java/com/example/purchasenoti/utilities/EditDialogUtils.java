@@ -1,6 +1,9 @@
 package com.example.purchasenoti.utilities;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -9,13 +12,17 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 
+import com.example.purchasenoti.AlarmReceiver;
 import com.example.purchasenoti.AppExecutors;
+import com.example.purchasenoti.ItemConstant;
 import com.example.purchasenoti.R;
 import com.example.purchasenoti.database.PurchaseItemDao;
 import com.example.purchasenoti.databinding.ItemInputDialogBinding;
 import com.example.purchasenoti.model.PurchaseItem;
 
 import java.util.Calendar;
+
+import static android.content.Context.ALARM_SERVICE;
 
 public class EditDialogUtils {
     private static final String TAG = EditDialogUtils.class.getSimpleName();
@@ -78,6 +85,8 @@ public class EditDialogUtils {
                     dao.insertPurchaseItem(purchaseItem);
                 }
             });
+
+            setNotification(activity, purchaseItem);
         });
 
         builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
@@ -97,5 +106,21 @@ public class EditDialogUtils {
         dialogBinding.dayPicker.setMinValue(0);
         dialogBinding.dayPicker.setMaxValue(30);
         dialogBinding.dayPicker.setWrapSelectorWheel(false);
+    }
+
+    private static void setNotification(Activity activity, PurchaseItem purchaseItem) {
+        Calendar calendar = DateUtils.getNextDate(purchaseItem.getLastPurchasedDate(), purchaseItem.getPurchaseTermYear(),
+                purchaseItem.getPurchaseTermMonth(), purchaseItem.getPurchaseTermDay());
+
+        Intent intent = new Intent(activity, AlarmReceiver.class);
+        intent.putExtra(ItemConstant.KEY_PURCHASE_ITEM, purchaseItem);
+        intent.putExtra(ItemConstant.KEY_ITEM_NAME, purchaseItem.getItemName());
+        intent.putExtra(ItemConstant.KEY_ITEM_ID, purchaseItem.getId());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(activity, 0, intent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) activity.getSystemService(ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
     }
 }

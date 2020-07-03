@@ -44,4 +44,9 @@
     <string name="uae">UAE</string>
     <string name="united_kingdom">United Kingdom</string>
     <string name="united_states">United States</string>
+    <string name="purchase_item">Purchase item</string>
+    <string name="time_to_buy">Time to buy</string>
+    <string name="time_to_buy_item">It\'s time to buy %s.</string>
+    <string name="channel_name">Notification</string>
+    <string name="channel_description">Make sound and pop on screen</string>
 </resources>

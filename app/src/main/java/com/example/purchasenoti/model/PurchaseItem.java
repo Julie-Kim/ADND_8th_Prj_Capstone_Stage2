@@ -139,7 +139,7 @@ public class PurchaseItem implements Parcelable {
     }
 
     private void calculateNextPurchaseDate() {
-        String nextDate = DateUtils.getNextDate(mLastPurchasedDate,
+        String nextDate = DateUtils.getNextDateString(mLastPurchasedDate,
                 mPurchaseTermYear, mPurchaseTermMonth, mPurchaseTermDay);
 
         mNextPurchaseDate = String.format(Locale.getDefault(), "%s  %s",
