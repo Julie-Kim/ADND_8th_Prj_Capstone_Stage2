@@ -20,4 +20,7 @@
     <dimen name="error_image_padding">16dp</dimen>
     <dimen name="product_name_text_size">16sp</dimen>
     <dimen name="refresh_button_size">48dp</dimen>
+    <dimen name="widget_min_width">240dp</dimen>
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="widget_min_height">100dp</dimen>
 </resources>

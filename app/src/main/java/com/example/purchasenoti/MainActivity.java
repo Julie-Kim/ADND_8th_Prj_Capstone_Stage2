@@ -17,6 +17,7 @@ import com.example.purchasenoti.databinding.ActivityMainBinding;
 import com.example.purchasenoti.model.PurchaseItem;
 import com.example.purchasenoti.utilities.DateUtils;
 import com.example.purchasenoti.utilities.EditDialogUtils;
+import com.example.purchasenoti.utilities.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
         }
         MainViewModel viewModel = new ViewModelProvider(this, mViewModelFactory).get(MainViewModel.class);
 
-        viewModel.getmPurchaseItems().observe(this, purchaseItems -> {
+        viewModel.getPurchaseItems().observe(this, purchaseItems -> {
             Log.d(TAG, "setupViewModel() observe, Updating list of purchase items from LiveData in ViewModel");
             showOrHideLoadingIndicator(false);
 
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
                 for (PurchaseItem item : purchaseItems) {
                     setNotification(item);
                 }
+                updatePreferencesForWidget(new ArrayList<>(purchaseItems));
             }
         });
     }
@@ -141,5 +143,9 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
         if (alarmManager != null) {
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
+    }
+
+    private void updatePreferencesForWidget(ArrayList<PurchaseItem> purchaseItems) {
+        PreferenceUtils.setPurchaseItemListForWidget(this, purchaseItems);
     }
 }

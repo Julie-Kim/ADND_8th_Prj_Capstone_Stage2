@@ -3,6 +3,12 @@ package com.example.purchasenoti.utilities;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.purchasenoti.model.PurchaseItem;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class PreferenceUtils {
@@ -102,5 +108,27 @@ public class PreferenceUtils {
 
     public static String getSortBySetting(Context context) {
         return SORT_BY[getSortBySettingValue(context)];
+    }
+
+    private static final String PREF_WIDGET = "pref_widget";
+
+    private static final String PREF_KEY_ITEMS = "items";
+
+    public static void setPurchaseItemListForWidget(Context context, ArrayList<PurchaseItem> purchaseItems) {
+        Set<String> widgetItemList = new HashSet<>();
+        for (PurchaseItem item : purchaseItems) {
+            widgetItemList.add(item.getItemName() + "  " + DateUtils.getDDayString(item.getNextPurchaseDate()));
+        }
+
+        SharedPreferences pref = context.getSharedPreferences(PREF_WIDGET, MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putStringSet(PREF_KEY_ITEMS, widgetItemList);
+        editor.apply();
+    }
+
+    public static ArrayList<String> getPurchaseItemListForWidget(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(PREF_WIDGET, MODE_PRIVATE);
+        Set<String> items = pref.getStringSet(PREF_KEY_ITEMS, new HashSet<>());
+        return new ArrayList<>(items);
     }
 }

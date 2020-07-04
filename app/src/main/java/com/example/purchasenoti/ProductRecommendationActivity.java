@@ -190,8 +190,6 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
         if (products != null && !products.isEmpty()) {
             showOrHideProductList(true);
             mAdapter.setProductList(products);
-
-            // TODO: updatePreferencesForWidget(products);
         } else {
             showOrHideProductList(false);
         }

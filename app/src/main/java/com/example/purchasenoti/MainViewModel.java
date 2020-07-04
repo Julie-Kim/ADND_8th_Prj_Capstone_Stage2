@@ -25,7 +25,7 @@ public class MainViewModel extends AndroidViewModel {
         mPurchaseItems = database.purchaseDao().loadAllPurchaseItems();
     }
 
-    public LiveData<List<PurchaseItem>> getmPurchaseItems() {
+    public LiveData<List<PurchaseItem>> getPurchaseItems() {
         return mPurchaseItems;
     }
 }
