@@ -1,8 +1,11 @@
 package com.example.purchasenoti;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,11 +33,11 @@ import com.example.purchasenoti.utilities.RetrofitConnection;
 import com.example.purchasenoti.utilities.RetrofitInterface;
 import com.google.android.material.appbar.AppBarLayout;
 
+import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ProductRecommendationActivity extends AppCompatActivity implements ProductListAdapter.ProductOnClickHandler {
     private static final String TAG = ProductRecommendationActivity.class.getSimpleName();
@@ -157,47 +160,7 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
     }
 
     private void loadProductList(String itemName) {
-        showOrHideLoadingIndicator(true);
-        showOrHideProductList(true);
-
-        RetrofitInterface retrofitInterface = RetrofitConnection.getRetrofitInstance().create(RetrofitInterface.class);
-        Call<SearchResults> call = retrofitInterface.geProductList(
-                JsonQueryUtils.getApiKey(),
-                JsonQueryUtils.getQueryType(),
-                JsonQueryUtils.getAmazonDomain(this),
-                itemName,
-                JsonQueryUtils.getSortBy(this)
-        );
-
-        call.enqueue(new Callback<SearchResults>() {
-            @Override
-            public void onResponse(Call<SearchResults> call, Response<SearchResults> response) {
-                if (response.isSuccessful()) {
-                    SearchResults searchResults = response.body();
-                    ArrayList<Product> productList = null;
-                    if (searchResults != null) {
-                        productList = searchResults.getProducts();
-                    }
-
-                    if (productList == null || productList.isEmpty()) {
-                        Log.d(TAG, "onResponse() productList is empty.");
-                        updateProductList(null);
-                    } else {
-                        Log.d(TAG, "onResponse() size of productList: " + productList.size());
-                        updateProductList(productList);
-                    }
-                } else {
-                    Log.e(TAG, "onResponse() response is not successful.");
-                    updateProductList(null);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SearchResults> call, Throwable t) {
-                Log.e(TAG, "onFailure() : " + t.toString());
-                updateProductList(null);
-            }
-        });
+        new FetchProductListTask(this).execute(itemName);
     }
 
     @Override
@@ -290,5 +253,85 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
                         })
                 .setPositiveButton(android.R.string.ok, (dialog12, which) -> loadProductList()).create()
                 .show();
+    }
+
+    private static class FetchProductListTask extends AsyncTask<String, Void, ArrayList<Product>> {
+
+        private WeakReference<ProductRecommendationActivity> mActivityReference;
+
+        FetchProductListTask(ProductRecommendationActivity activity) {
+            mActivityReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            ProductRecommendationActivity activity = mActivityReference.get();
+            if (activity == null || activity.isFinishing()) {
+                Log.e(TAG, "FetchProductListTask, onPreExecute() activity is null or is finishing.");
+                return;
+            }
+
+            activity.showOrHideLoadingIndicator(true);
+            activity.showOrHideProductList(true);
+        }
+
+        @Override
+        protected ArrayList<Product> doInBackground(String... strings) {
+            if (strings.length == 0) {
+                Log.e(TAG, "FetchProductListTask, no parameter.");
+                return null;
+            }
+
+            String itemName = strings[0];
+            if (TextUtils.isEmpty(itemName)) {
+                Log.e(TAG, "FetchProductListTask, wrong parameter.");
+                return null;
+            }
+
+            Context context = mActivityReference.get();
+
+            RetrofitInterface retrofitInterface = RetrofitConnection.getRetrofitInstance().create(RetrofitInterface.class);
+            Call<SearchResults> call = retrofitInterface.geProductList(
+                    JsonQueryUtils.getApiKey(),
+                    JsonQueryUtils.getQueryType(),
+                    JsonQueryUtils.getAmazonDomain(context),
+                    itemName,
+                    JsonQueryUtils.getSortBy(context)
+            );
+
+            ArrayList<Product> productList = null;
+
+            try {
+                SearchResults searchResults = call.execute().body();
+                if (searchResults != null) {
+                    productList = searchResults.getProducts();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return productList;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Product> productList) {
+            super.onPostExecute(productList);
+
+            ProductRecommendationActivity activity = mActivityReference.get();
+            if (activity == null || activity.isFinishing()) {
+                Log.e(TAG, "FetchProductListTask, onPostExecute() activity is null or is finishing.");
+                return;
+            }
+
+            if (productList == null || productList.isEmpty()) {
+                Log.d(TAG, "FetchProductListTask, onPostExecute() productList is empty.");
+                activity.updateProductList(null);
+            } else {
+                Log.d(TAG, "FetchProductListTask, onPostExecute() size of productList: " + productList.size());
+                activity.updateProductList(productList);
+            }
+        }
     }
 }
