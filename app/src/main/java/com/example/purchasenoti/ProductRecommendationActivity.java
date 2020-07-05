@@ -28,6 +28,7 @@ import com.example.purchasenoti.utilities.JsonQueryUtils;
 import com.example.purchasenoti.utilities.PreferenceUtils;
 import com.example.purchasenoti.utilities.RetrofitConnection;
 import com.example.purchasenoti.utilities.RetrofitInterface;
+import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.ArrayList;
 
@@ -63,6 +64,8 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
             mPurchaseItem = intent.getParcelableExtra(ItemConstant.KEY_PURCHASE_ITEM);
 
             if (mPurchaseItem != null) {
+                setAppbarTitle(mPurchaseItem.getItemName());
+
                 updatePurchaseItemInfo(mPurchaseItem);
 
                 int id = mPurchaseItem.getId();
@@ -101,6 +104,28 @@ public class ProductRecommendationActivity extends AppCompatActivity implements 
         mBinding.ivRefresh.setOnClickListener(v -> loadProductList());
 
         loadProductList();
+    }
+
+    private void setAppbarTitle(final String title) {
+        mBinding.appbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = true;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+
+                if (scrollRange + verticalOffset == 0) {
+                    mBinding.toolbarTitle.setText(title);
+                    isShow = true;
+                } else if (isShow) {
+                    mBinding.toolbarTitle.setText("");
+                    isShow = false;
+                }
+            }
+        });
     }
 
     private Observer<PurchaseItem> getObserver() {

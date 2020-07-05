@@ -18,6 +18,7 @@ import com.example.purchasenoti.model.PurchaseItem;
 import com.example.purchasenoti.utilities.DateUtils;
 import com.example.purchasenoti.utilities.EditDialogUtils;
 import com.example.purchasenoti.utilities.PreferenceUtils;
+import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mDb = PurchaseItemDatabase.getInstance(this);
 
+        setAppbarTitle(getString(R.string.app_name));
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mBinding.rvPurchaseItemList.setLayoutManager(layoutManager);
         mBinding.rvPurchaseItemList.setHasFixedSize(true);
@@ -48,6 +51,28 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
 
         mBinding.btAdd.setOnClickListener(v ->
                 EditDialogUtils.showItemInputDialog(this, mDb.purchaseDao(), null));
+    }
+
+    private void setAppbarTitle(final String title) {
+        mBinding.appbarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = true;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+
+                if (scrollRange + verticalOffset == 0) {
+                    mBinding.toolbarTitle.setText(title);
+                    isShow = true;
+                } else if (isShow) {
+                    mBinding.toolbarTitle.setText("");
+                    isShow = false;
+                }
+            }
+        });
     }
 
     private void loadPurchaseItemList() {
