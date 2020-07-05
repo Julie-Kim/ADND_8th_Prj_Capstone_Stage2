@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.purchasenoti.database.PurchaseItemDatabase;
 import com.example.purchasenoti.databinding.ActivityMainBinding;
 import com.example.purchasenoti.model.PurchaseItem;
+import com.example.purchasenoti.utilities.AdUtils;
 import com.example.purchasenoti.utilities.DateUtils;
 import com.example.purchasenoti.utilities.EditDialogUtils;
 import com.example.purchasenoti.utilities.PreferenceUtils;
@@ -25,6 +26,8 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements PurchaseItemListAdapter.PurchaseItemOnClickHandler {
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private static final int AD_VIEW_HEIGHT_DP = 60;
 
     private ActivityMainBinding mBinding;
     private PurchaseItemListAdapter mAdapter;
@@ -40,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
 
         setAppbarTitle(getString(R.string.app_name));
 
+        initAdView();
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mBinding.rvPurchaseItemList.setLayoutManager(layoutManager);
         mBinding.rvPurchaseItemList.setHasFixedSize(true);
@@ -51,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
 
         mBinding.btAdd.setOnClickListener(v ->
                 EditDialogUtils.showItemInputDialog(this, mDb.purchaseDao(), null));
+    }
+
+    private void initAdView() {
+        AdUtils.initMobileAds(this, findViewById(R.id.adView), mBinding.itemListLayout);
     }
 
     private void setAppbarTitle(final String title) {

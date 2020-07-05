@@ -29,6 +29,40 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    flavorDimensions "flavors"
+    productFlavors {
+        free {
+            dimension "flavors"
+            applicationIdSuffix ".free"
+            versionNameSuffix "-free"
+            buildConfigField 'boolean', 'IS_FREE', "true"
+        }
+        paid {
+            dimension "flavors"
+            applicationIdSuffix ".paid"
+            versionNameSuffix "-paid"
+            buildConfigField 'boolean', 'IS_FREE', "false"
+        }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            res.srcDirs = ['src/main/res']
+        }
+        free {
+            manifest.srcFile 'src/free/AndroidManifest.xml'
+            java.srcDirs = ['src/free/java']
+            res.srcDirs = ['src/free/res']
+        }
+        paid {
+            manifest.srcFile 'src/paid/AndroidManifest.xml'
+            java.srcDirs = ['src/paid/java']
+            res.srcDirs = ['src/paid/res']
+        }
+    }
 }
 
 dependencies {
@@ -44,6 +78,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    freeImplementation 'com.google.android.gms:play-services-ads:19.2.0'
 
     def room_version = "2.2.5"
     implementation "androidx.room:room-runtime:$room_version"
