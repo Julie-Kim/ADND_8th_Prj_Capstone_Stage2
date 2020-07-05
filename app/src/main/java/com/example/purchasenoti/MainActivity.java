@@ -20,6 +20,7 @@ import com.example.purchasenoti.utilities.DateUtils;
 import com.example.purchasenoti.utilities.EditDialogUtils;
 import com.example.purchasenoti.utilities.PreferenceUtils;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,19 +28,20 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity implements PurchaseItemListAdapter.PurchaseItemOnClickHandler {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private static final int AD_VIEW_HEIGHT_DP = 60;
-
     private ActivityMainBinding mBinding;
     private PurchaseItemListAdapter mAdapter;
 
     private PurchaseItemDatabase mDb;
     private ViewModelProvider.Factory mViewModelFactory;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mDb = PurchaseItemDatabase.getInstance(this);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         setAppbarTitle(getString(R.string.app_name));
 
@@ -54,8 +56,12 @@ public class MainActivity extends AppCompatActivity implements PurchaseItemListA
 
         loadPurchaseItemList();
 
-        mBinding.btAdd.setOnClickListener(v ->
-                EditDialogUtils.showItemInputDialog(this, mDb.purchaseDao(), null));
+        mBinding.btAdd.setOnClickListener(v -> {
+            EditDialogUtils.showItemInputDialog(this, mDb.purchaseDao(), null);
+            Bundle params = new Bundle();
+            params.putString("button", "add");
+            mFirebaseAnalytics.logEvent("button_click", params);
+        });
     }
 
     private void initAdView() {
